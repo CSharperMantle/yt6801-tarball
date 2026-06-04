@@ -50,6 +50,8 @@
 #define FXGMAC_NS_IFA_LOCAL_LINK     1
 #define FXGMAC_NS_IFA_GLOBAL_UNICAST 2
 
+#define FXGMAC_INT_MODERATION_ENABLED 1
+
 #define FXGMAX_ASPM_WAR_EN
 /* Descriptor related parameters */
 #if FXGMAC_TX_HANG_TIMER_ENABLED
