@@ -973,5 +973,7 @@ void fxgmac_print_all_hw_features(struct fxgmac_pdata *pdata);
 int fxgmac_drv_probe(struct device *dev,
     struct fxgmac_resources *res);
 int fxgmac_drv_remove(struct device *dev);
+int fxgmac_panic_notifier_init(void);
+void fxgmac_panic_notifier_exit(void);
 
 #endif /* __FUXI_GMAC_H__ */

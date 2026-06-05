@@ -118,25 +118,6 @@ static struct notifier_block panic_nb = {
     .priority      = INT_MAX
 };
 
-static int  panic_notifier_init(void) {
-
-    int ret = atomic_notifier_chain_register(&panic_notifier_list, &panic_nb);
-    if (ret) {
-        pr_err("Failed to register panic notifier\n");
-        return ret;
-    }
-
-    pr_info("Panic notifier registered\n");
-
-    return 0;
-}
-
-static void  panic_notifier_exit(void)
-{
-    atomic_notifier_chain_unregister(&panic_notifier_list, &panic_nb);
-    pr_info("Panic notifier unregistered\n");
-}
-
 static int fxgmac_read_mac_addr(struct fxgmac_pdata *pdata)
 {
     struct net_device *netdev = pdata->netdev;
@@ -622,8 +603,6 @@ int fxgmac_drv_probe(struct device *dev, struct fxgmac_resources *res)
         DPRINTK("fxgamc_drv_prob callout, netdev num_tx_q=%u\n",
                                     netdev->real_num_tx_queues);
 
-    panic_notifier_init();
-
     return 0;
 
 err_free_netdev:
@@ -643,7 +622,6 @@ int fxgmac_drv_remove(struct device *dev)
 
     unregister_netdev(netdev);
     free_netdev(netdev);
-    panic_notifier_exit();
 
     return 0;
 }
@@ -1156,4 +1134,23 @@ void fxgmac_print_all_hw_features(struct fxgmac_pdata *pdata)
     DPRINTK("\n");
     DPRINTK("=====================================================\n");
     DPRINTK("\n");
+}
+
+int fxgmac_panic_notifier_init(void)
+{
+    int ret = atomic_notifier_chain_register(&panic_notifier_list, &panic_nb);
+    if (ret) {
+        pr_err("Failed to register panic notifier\n");
+        return ret;
+    }
+
+    pr_info("Panic notifier registered\n");
+
+    return 0;
+}
+
+void fxgmac_panic_notifier_exit(void)
+{
+    atomic_notifier_chain_unregister(&panic_notifier_list, &panic_nb);
+    pr_info("Panic notifier unregistered\n");
 }

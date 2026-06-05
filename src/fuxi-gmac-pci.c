@@ -267,7 +267,29 @@ static struct pci_driver fxgmac_pci_driver = {
     .shutdown   = fxgmac_shutdown,
 };
 
-module_pci_driver(fxgmac_pci_driver);
+static int __init fxgmac_pci_driver_init(void)
+{
+    int ret;
+
+    ret = fxgmac_panic_notifier_init();
+    if (ret)
+        return ret;
+
+    ret = pci_register_driver(&fxgmac_pci_driver);
+    if (ret)
+        fxgmac_panic_notifier_exit();
+
+    return ret;
+}
+
+static void __exit fxgmac_pci_driver_exit(void)
+{
+    pci_unregister_driver(&fxgmac_pci_driver);
+    fxgmac_panic_notifier_exit();
+}
+
+module_init(fxgmac_pci_driver_init);
+module_exit(fxgmac_pci_driver_exit);
 
 MODULE_DESCRIPTION(FXGMAC_DRV_DESC);
 MODULE_VERSION(FXGMAC_DRV_VERSION);
