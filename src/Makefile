@@ -62,7 +62,8 @@ endif
 
 yt6801-objs :=  fuxi-gmac-common.o fuxi-gmac-desc.o fuxi-gmac-ethtool.o fuxi-gmac-hw.o fuxi-gmac-net.o fuxi-gmac-pci.o fuxi-gmac-phy.o fuxi-efuse.o  fuxi-gmac-ioctl.o
 
-BASEDIR := /lib/modules/$(shell uname -r)
+KERNELRELEASE ?= $(shell uname -r)
+BASEDIR := /lib/modules/$(KERNELRELEASE)
 KERNELDIR ?= $(BASEDIR)/build
 PWD :=$(shell pwd)
 DRIVERDIR := $(BASEDIR)/kernel/drivers/net/ethernet/motorcomm/yt6801
@@ -72,7 +73,7 @@ YTDIR := $(subst $(BASEDIR)/,,$(DRIVERDIR))
 KERNEL_GCC_VERSION := $(shell cat /proc/version | sed -n 's/.*gcc version \([[:digit:]]\.[[:digit:]]\.[[:digit:]]\).*/\1/p')
 CCVERSION = $(shell $(CC) -dumpversion)
 
-KVER = $(shell uname -r)
+KVER = $(KERNELRELEASE)
 KMAJ = $(shell echo $(KVER) | \
 sed -e 's/^\([0-9][0-9]*\)\.[0-9][0-9]*\.[0-9][0-9]*.*/\1/')
 KMIN = $(shell echo $(KVER) | \
